@@ -1,22 +1,48 @@
 package com.example.demo.controller;
 
-import com.example.demo.MyDataSource;
+import com.example.demo.controller.utils.R;
+import com.example.demo.domain.Book;
+import com.example.demo.service.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/books")
 public class BookController {
     @Autowired
-    private Environment env;
-    @Autowired
-    private MyDataSource myDataSource;
+    private IBookService bookService;
 
     @GetMapping
-    public String getById(){
-        System.out.println(myDataSource);
-        return "running";
+    public R getAll(){
+        R r = new R();
+        List<Book> b = bookService.list();
+        Boolean flag = b != null;
+        r.setFlag(flag);
+        r.setData(b);
+        return r;
+    }
+
+    @PostMapping
+    public R save(@RequestBody Book book){
+        return new R(bookService.save(book));
+    }
+    @PutMapping
+    public R update(@RequestBody Book book){
+        return new R(bookService.updateById(book));
+    }
+    @DeleteMapping("{id}")
+    public R save(@PathVariable Integer id) {
+        return new R(bookService.removeById(id));
+    }
+    @GetMapping("{id}")
+    public R  getById(@PathVariable Integer id){
+        return new R(true, bookService.getById(id));
+    }
+
+    @GetMapping("/{currentPage}/{pageSize}")
+    public R getPage(@PathVariable Integer currentPage,@PathVariable Integer pageSize){
+        return new R(true, bookService.getPage(currentPage, pageSize));
     }
 }

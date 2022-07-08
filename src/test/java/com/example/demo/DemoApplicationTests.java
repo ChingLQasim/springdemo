@@ -1,24 +1,20 @@
 package com.example.demo;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo.Dao.BookDao;
-import com.example.demo.domain.Book;
+import com.example.demo.service.IBookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import com.example.demo.service.BookService;
 
 @SpringBootTest
 class DemoApplicationTests {
 
     @Autowired
-
-    private BookDao bookDao;
+    private IBookService bookService;
 
     @Test
     void contextLoads() {
-        IPage page = new Page(1,5);
-        bookDao.selectPage(page,null);
+        System.out.println(bookService.getById(1));
     }
 
 }
